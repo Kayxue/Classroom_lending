@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if form.errors %}
+<div class="alert alert-danger">
+  {{ form.errors }}
+</div>
+{% endif %}
+<form action="" method="POST">
+  {% csrf_token %}
+  <div id="login-form" class="form-inline">
+    <input type="text" name="username" id="username" placeholder="請輸入您的帳號" />
+    <input type="password" name="password" id="pwd" placeholder="請輸入您的密碼" />
+    <input type="submit" class="btn btn-primary" value="登入">
+  </div>
+</form>
+<script>
+var inputs = document.querySelectorAll('#login-form input');
+inputs.forEach(function(item) {
+  item.classList.add('form-control');
+});
+</script>
+{% endblock %}
