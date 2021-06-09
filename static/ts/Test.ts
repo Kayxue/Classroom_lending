@@ -1,6 +1,4 @@
 import $ from "jquery"
 
-$(() => {
-    $(document).find("div").addClass("test")
-})
+$(document).find("div").addClass("test")
 
