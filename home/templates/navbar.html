@@ -5,11 +5,11 @@
     </div>
     <div class="uk-navbar-right">
       <ul id="main-menu" class="uk-navbar-nav uk-visible@m" uk-grid>
+        <li><a href="/"><span uk-icon="home"></span> 首頁</a></li>
         <li><a href="/classrooms/"><span uk-icon="list"></span>教室清單</a></li>
         {% if not user.is_authenticated %}
         <li><a href="{% url 'login' %}"><span uk-icon="sign-in"></span> 登入</a></li>
         {% else %}
-        <li><a href="/"><span uk-icon="home"></span> 首頁</a></li>
         <li>
           <a href=""><span uk-icon="user"></span> {{ user.username }}</a>
           <div class="uk-navbar-dropdown">

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="uk-margin-small-top uk-margin-small-bottom">
     <h1>教室清單</h1>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.is_superuser %}
         <a class="uk-button uk-button-primary" href="addclassroom">新增教室</a>
     {% endif %}
 </div>
