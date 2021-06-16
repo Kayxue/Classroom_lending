@@ -2,22 +2,36 @@
 
 {% block content %}
 {% if form.errors %}
-<div class="alert alert-danger">
-  {{ form.errors }}
+<div class="uk-alert-danger" uk-alert>
+  <a class="uk-alert-close" uk-close></a>
+  <p>{{ form.errors }}</p>
 </div>
 {% endif %}
-<form action="" method="POST">
-  {% csrf_token %}
-  <div id="login-form" class="form-inline">
-    <input type="text" name="username" id="username" placeholder="請輸入您的帳號" />
-    <input type="password" name="password" id="pwd" placeholder="請輸入您的密碼" />
-    <input type="submit" class="btn btn-primary" value="登入">
-  </div>
-</form>
+<div class="uk-card uk-card-default uk-card-body">
+  <div class="uk-card-title">使用者登入</div>
+  <form action="" class="uk-form-stacked" method="post">
+    {% csrf_token %}
+    <ul class="uk-child-width-1-2@s uk-margin" uk-grid>
+      <li class="ul-first-column">
+        <label for="id_username">使用者名稱</label>
+        <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150"
+          required id="id_username">
+      </li>
+      <li class="uk-grid-margin uk-first-column">
+        <label for="id_password">密碼</label>
+        <input type="password" name="password" autocomplete="current-password" required id="id_password">
+      </li>
+    </ul>
+    <input type="submit" class="uk-button uk-button-primary" value="登入">
+  </form>
+</div>
 <script>
-var inputs = document.querySelectorAll('#login-form input');
-inputs.forEach(function(item) {
-  item.classList.add('form-control');
-});
+  document.querySelectorAll('form label').forEach(function (item) {
+    item.classList.add('uk-form-label');
+  });
+  document.querySelectorAll('form input').forEach(function (item) {
+    item.classList.add('uk-input');
+  });
 </script>
+
 {% endblock %}
