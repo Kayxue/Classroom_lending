@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p class="alert alert-info">您已登出!!</p>  
+<div class="uk-alert-success" uk-alert>
+    <h3>登出成功！</h3>
+    <p>感謝您使用本系統！祝你有個美好的一天！</p>
+</div>
 
-<a href="{% url 'login' %}" class="btn btn-primary">請按此處重新登入</a>
 {% endblock %}
