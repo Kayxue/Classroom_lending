@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="uk-margin-small-top uk-margin-small-bottom">
+    <h1>教室清單</h1>
+    {% if user.is_authenticated %}
+        <a class="uk-button uk-button-primary" href="addclassroom">新增教室</a>
+    {% endif %}
+</div>
+<table class="uk-table uk-table-striped uk-table-divider">
+    <thead>
+        <tr>
+            <th>教室名稱</th>
+            <th>教室位置</th>
+            <th>教室描述</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in classroom_list %}
+        <tr>
+            <td> {{ item.name }} </td>
+            <td> {{ item.place }} </td>
+            <td> {{ item.description }} </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
