@@ -7,21 +7,23 @@
       <ul id="main-menu" class="uk-navbar-nav uk-visible@m" uk-grid>
         <li><a href="/"><span uk-icon="home"></span> 首頁</a></li>
         <li><a href="/classrooms/"><span uk-icon="list"></span>教室清單</a></li>
+
         {% if not user.is_authenticated %}
         <li><a href="{% url 'login' %}"><span uk-icon="sign-in"></span> 登入</a></li>
         {% else %}
+        <li><a href="/users/">使用者管理</a></li>
         <li>
           <a href=""><span uk-icon="user"></span> {{ user.username }}</a>
           <div class="uk-navbar-dropdown">
             <ul class="uk-nav uk-navbar-dropdown-nav">
-              <li><a href="{% url 'password_change' %}"><span uk-icon="lock"></span> 變更密碼</a></li>
               {% if user.is_staff %}
-                <li><a href="/admin/"><span uk-icon="cog"></span> 後臺</a></li>
+              <li><a href="/admin/"><span uk-icon="cog"></span> 後臺</a></li>
               {% endif %}
               <li><a href="{% url 'logout' %}"><span uk-icon="sign-out"></span> 登出</a></li>
             </ul>
           </div>
         </li>
+
         {% endif %}
       </ul>
       <a uk-navbar-toggle-icon="" href="#main-menu" uk-toggle="cls: uk-visible@m" class="uk-navbar-toggle uk-hidden@m uk-icon uk-navbar-toggle-icon" aria-expanded="false">

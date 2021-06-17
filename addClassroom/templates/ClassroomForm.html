@@ -11,8 +11,21 @@
     })
 </script>
 <div class="uk-margin-small-top uk-margin-small-bottom">
-    <h1>新增教室</h1>
+    <h1>{{ title }}</h1>
 </div>
+{% if title == "修改教室"%}
+<div class="uk-small-bottom">
+    <h3>正在修改的教室：</h3>
+    <ul class="js-filter uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
+        <li>
+            <div class="uk-card uk-card-default uk-card-small uk-card-body">
+                <h3 class="uk-card-title">{{ classroom.name }}</h3>
+                <p>位置：{{ classroom.place }}</p>
+            </div>
+        </li>
+    </ul>
+</div>
+{% endif %}
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <table class="uk-table uk-table-divider">
