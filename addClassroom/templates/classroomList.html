@@ -11,7 +11,7 @@
     {% for item in classroom_list %}
     <li>
         <div class="uk-card uk-card-default uk-card-small uk-card-hover uk-card-body uk-link-toggle" id="{{ item.id }}">
-            <h3 class="uk-card-title">{{ item.name }}</h3>
+            <a class="uk-card-title uk-header-medium" href="{% url 'classroomDetail' item.id%}">{{ item.name }}</a>
             <p>位置：{{ item.place }}</p>
             {% if user.is_authenticated and user.is_superuser %}
             <div class="uk-card-footer">
@@ -28,14 +28,4 @@
     </li>
     {% endfor %}
 </ul>
-<h1 class="domain">{{ domain }}</h1>
-<script>
-    $(document).find(".domain").hide()
-    $(".uk-card").click((event) => {
-        window.location.href=`${$(document).find(".domain").text()}${event.currentTarget.id}/detail`
-    })
-    $(".uk-button").click((event) => {
-        event.stopPropagation();
-    })
-</script>
 {% endblock %}
