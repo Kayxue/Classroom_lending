@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1>{{ userToWatch.last_name }}{{ userToWatch.first_name }}</h1>
+    {% if user.is_authenticated and user.is_superuser %}
+    <a class="uk-button uk-button-primary" href="{% url 'editUser' userToWatch.id%}">修改</a>
+    <a class="uk-button uk-button-danger" href="{% url 'deleteUser' userToWatch.id%}">刪除</a>
+    {% endif %}
+</div>
+<div class="uk-margin-medium-top uk-margin-medium-bottom uk-flex">
+    <div class="uk-card uk-card-default uk-card-small">
+        <div class="uk-card-header">單位</div>
+        <div class="uk-card-body">{{ userToWatch.department }}</div>
+    </div>
+    <div class="uk-card uk-card-small uk-card-default uk-margin-medium-left">
+        <div class="uk-card-header">分機</div>
+        <div class="uk-card-body">{{ userToWatch.extension }}</div>
+    </div>
+</div>
+{% if user.is_authenticated %}
+<div>
+    <h3>借用記錄</h3>
+    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover">
+        <thead class="uk-light uk-background-secondary">
+        <tr>
+            <th>日期</th>
+            <th>借用教室</th>
+            <th>開始時間</th>
+            <th>結束時間</th>
+            <th>進行動作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reservation in reservations %}
+        <tr>
+            <td>{{ reservation.borrowDate }}</td>
+            <td><a href="{% url 'classroomDetail' reservation.classroom.id %}">{{ reservation.classroom.name }}</a></td>
+            <td>{{ reservation.get_startTime_display }}</td>
+            <td>{{ reservation.get_end_display }}</td>
+            {% if user.is_superuser or reservation.user.id == user.id %}
+            <td>
+                <div>
+                    <a href="{% url 'editLog' reservation.id %}" class="uk-button uk-button-primary">修改</a>
+                    <a href="{% url 'deleteLog' reservation.id %}" class="uk-button uk-button-danger">刪除</a>
+                </div>
+            </td>
+            {% else %}
+            <td>
+                <div>
+                    <button class="uk-button uk-button-primary" href="{% url 'editLog' reservation.id %}" disabled>您不是管理者</button>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,11 +1,10 @@
-from urllib import request
-
 from django.contrib.auth.mixins import *
-from django.shortcuts import render
-from django.views.generic import *
 from django.urls import *
+from django.views.generic import *
+from lendingSystem.models import *
+from django.utils import timezone
+
 from .models import *
-from django.contrib.sites.shortcuts import get_current_site
 
 
 class SuperuserRequiredMixin(AccessMixin):
@@ -33,17 +32,68 @@ class AddClassroom(SuperuserRequiredMixin, CreateView):
 
 class ClassroomList(ListView):
     model = Classroom
-    template_name = "classroomList.html"
+    template_name = "ClassroomList.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["domain"] = self.request.build_absolute_uri()
+        results = Log.objects.filter(borrowDate=timezone.localdate())
+        classrooms = []
+        for classroom in context["classroom_list"]:
+            reservations = []
+            statuses = []
+            for reservation in results:
+                if reservation.classroom_id == classroom.id:
+                    reservations.append(reservation)
+                    for i in range(0, 8):
+                        if reservation.startTime <= i <= reservation.end:
+                            try:
+                                if statuses[i] == 0:
+                                    statuses[i] = 1
+                            except:
+                                statuses.append(1)
+                        else:
+                            try:
+                                if statuses[i] != 1:
+                                    statuses[i] = 0
+                            except:
+                                statuses.append(0)
+            if len(statuses) == 0:
+                statuses = [0, 0, 0, 0, 0, 0, 0, 0]
+
+            nowHour = timezone.localtime().hour
+            nowMinute = timezone.localtime().minute
+            if nowHour == 12 or nowHour < 8 or nowHour >= 17:
+                classroom.using = False
+            elif 12 < nowHour < 17:
+                nowHour -= 9
+                if statuses[nowHour] == 1 and nowMinute > 10:
+                    classroom.using = True
+                else:
+                    classroom.using = False
+            elif 8 <= nowHour < 12:
+                nowHour -= 8
+                if statuses[nowHour] == 1 and nowMinute > 10:
+                    classroom.using = True
+                else:
+                    classroom.using = False
+
+            classroom.statuses = statuses
+            classroom.reservation = reservations
+            classrooms.append(classroom)
+
+        context["classroom_list"] = classrooms
         return context
 
 
 class ClassroomDetail(DetailView):
     model = Classroom
-    template_name = "classroomDetail.html"
+    template_name = "ClassroomDetail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        results = Log.objects.filter(classroom_id=self.kwargs["pk"])
+        context["reservations"] = results
+        return context
 
 
 class EditClassroom(SuperuserRequiredMixin, UpdateView):
@@ -62,7 +112,7 @@ class EditClassroom(SuperuserRequiredMixin, UpdateView):
 
 class DeleteClassroom(SuperuserRequiredMixin, DeleteView):
     model = Classroom
-    template_name = "deleteClassroom.html"
+    template_name = "DeleteClassroom.html"
 
     def get_success_url(self):
         return reverse("classroomList")

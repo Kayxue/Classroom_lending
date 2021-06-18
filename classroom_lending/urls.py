@@ -21,7 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', include("home.urls"), name="home"),
     path("", RedirectView.as_view(url="home/")),
-    path("account/", include('django.contrib.auth.urls')),
+    path("accounts/", include('django.contrib.auth.urls')),
     path("classrooms/", include('addClassroom.urls'), name="classrooms"),
-    path("users/", include("userManagement.urls"), name="userManagement")
+    path("users/", include("userManagement.urls"), name="userManagement"),
+    path("logs/", include("lendingSystem.urls"), name="lendingSystem")
 ]

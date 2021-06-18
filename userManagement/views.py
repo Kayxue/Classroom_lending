@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import *
 from .models import *
+from lendingSystem.models import *
 from django.db.models import *
 
 
@@ -42,9 +43,10 @@ class AddUser(SuperuserRequiredMixin, CreateView):
 
 class EditUser(AccessMixin, UpdateView):
     model = User
-    fields = ["first_name", "last_name", "department",
+    fields = ["last_name", "first_name", "department",
               "extension", "username", "password"]
     template_name = "UserForm.html"
+    context_object_name = "userToEdit"
 
     def dispatch(self, req, *args, **kwargs):
         if not req.user.is_superuser and req.user.id != self.kwargs["pk"]:
@@ -68,11 +70,20 @@ class EditUser(AccessMixin, UpdateView):
 class UserDetail(LoginRequiredMixin, DetailView):
     model = User
     template_name = "UserDetail.html"
+    context_object_name = "userToWatch"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        Userid = self.kwargs["pk"]
+        results = Log.objects.filter(user_id=Userid)
+        context["reservations"] = results
+        return context
 
 
 class DeleteUser(SuperuserRequiredMixin, DeleteView):
     model = User
-    template_name = "deleteUser.html"
+    template_name = "DeleteUser.html"
+    context_object_name = "userToDelete"
 
     def get_success_url(self):
         return reverse("userList")

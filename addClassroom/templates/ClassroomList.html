@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="uk-margin-small-top uk-margin-small-bottom">
+    <h1>教室清單</h1>
+    {% if user.is_authenticated and user.is_superuser %}
+    <a class="uk-button uk-button-primary" href="addclassroom/">新增教室</a>
+    {% endif %}
+</div>
+<ul class="js-filter uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
+    {% for item in classroom_list %}
+    <li>
+        <div class="uk-card uk-card-default uk-card-small uk-card-hover uk-card-body uk-link-toggle" id="{{ item.id }}">
+            <a class="uk-card-title uk-header-medium" href="{% url 'classroomDetail' item.id%}">{{ item.name }}</a>
+            {% if user.is_authenticated %}
+                {% if item.using == True %}
+                <div class="uk-card-badge uk-label redBadge">使用中</div>
+                {% else %}
+                <div class="uk-card-badge uk-label greenBadge">空</div>
+                {% endif %}
+                <p>今日借用：</p>
+                <table class="uk-table uk-table-divider uk-table-striped uk-width-1 uk-height-1">
+                    <thead>
+                        <tr>
+                            <th>一</th>
+                            <th>二</th>
+                            <th>三</th>
+                            <th>四</th>
+                            <th>五</th>
+                            <th>六</th>
+                            <th>七</th>
+                            <th>八</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        {% for status in item.statuses %}
+                            {% if status == 1 %}
+                            <td>滿</td>
+                            {% else %}
+                            <td>空</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    </tbody>
+                </table>
+            {% else %}
+            <p>位置：{{ item.place }}</p>
+            {% endif %}
+            {% if user.is_authenticated and user.is_superuser %}
+            <div class="uk-card-footer">
+                <a class="uk-button uk-button-primary" href="/logs/create/{{ item.id }}">預約</a>
+                <a class="uk-button uk-button-secondary" href="{% url 'editClassroom' item.id%}">修改</a>
+                <a class="uk-button uk-button-danger" href="{% url 'deleteClassroom' item.id%}">刪除</a>
+            </div>
+            {% elif user.is_authenticated %}
+            <div class="uk-card-footer">
+                <a class="uk-button uk-button-primary" href="/logs/create/{{ item.id }}">預約</a>
+            </div>
+            {% endif %}
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

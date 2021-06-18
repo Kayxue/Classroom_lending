@@ -3,9 +3,10 @@
 {% block content %}
 <script>
     $(document).ready(() => {
-        $("table").find("input").addClass("uk-input")
-        $("table").find("textarea").addClass("uk-textarea")
+        $("table").find("input[type='text']").addClass("uk-input")
+        $("table").find("input[type='checkbox']").addClass("uk-checkbox")
         $("table").find("label").addClass("uk-form-label")
+        $("table").find("select").addClass("uk-select")
         $(".back").click(() => {
             window.history.back()
         })
@@ -14,9 +15,22 @@
 <div class="uk-margin-small-top uk-margin-small-bottom">
     <h1>{{ title }}</h1>
 </div>
-{% if title == "修改教室"%}
+{% if title == "修改預約" %}
 <div class="uk-small-bottom">
-    <h3>正在修改的教室：</h3>
+    <h3>修改中的預約：</h3>
+    <ul class="js-filter uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
+        <li>
+            <div class="uk-card uk-card-default uk-card-small uk-card-body">
+                <h3 class="uk-card-title">{{ log.classroom.name }}</h3>
+                <p>借用人：{{ log.user.last_name }}{{ log.user.first_name }}</p>
+                <p>借用時間：{{ log.borrowDate }} {{ log.get_startTime_display }}～{{ log.get_end_display }}</p>
+            </div>
+        </li>
+    </ul>
+</div>
+{% else %}
+<div class="uk-small-bottom">
+    <h3>要借用的教室：</h3>
     <ul class="js-filter uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
         <li>
             <div class="uk-card uk-card-default uk-card-small uk-card-body">
