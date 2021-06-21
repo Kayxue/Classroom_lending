@@ -36,7 +36,17 @@ class ClassroomList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        results = Log.objects.filter(borrowDate=timezone.localdate())
+        # timezone.localdate()==today or (everyWeek=True and borrowDate.weekDay()==timezone.localdate().weekday())
+        weekday = timezone.localdate().weekday()
+        if weekday == 6:
+            weekday = 1
+        else:
+            weekday += 2
+
+        results = Log.objects.filter(
+            Q(borrowDate=timezone.localdate()) | Q(borrowDate__week_day=weekday, everyWeek=True,
+                                                   endDate__gte=timezone.localdate(),
+                                                   borrowDate__lte=timezone.localdate()))
         classrooms = []
         for classroom in context["classroom_list"]:
             reservations = []

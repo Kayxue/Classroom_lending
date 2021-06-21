@@ -18,7 +18,7 @@ class Log(Model):
 
     user = ForeignKey(User, CASCADE, verbose_name="使用者")
 
-    classroom = ForeignKey(Classroom, CASCADE,verbose_name="教室")
+    classroom = ForeignKey(Classroom, CASCADE, verbose_name="教室")
 
     borrowDate = DateField("借出日期")
 
@@ -27,3 +27,5 @@ class Log(Model):
     end = IntegerField("結束時間", choices=choice)
 
     everyWeek = BooleanField(verbose_name="固定每週借用")
+
+    endDate = DateField("結束日期")

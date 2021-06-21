@@ -1,8 +1,12 @@
+from django import forms
+from django.contrib import messages
 from django.contrib.auth.mixins import *
 from django.urls import reverse
 from django.views.generic import *
 from .models import *
 from addClassroom.models import *
+from django.utils import timezone
+from datetime import datetime
 
 from django.shortcuts import render
 
@@ -12,7 +16,7 @@ from django.shortcuts import render
 
 class createLog(LoginRequiredMixin, CreateView):
     model = Log
-    fields = ["user", "borrowDate", "startTime", "end", "everyWeek"]
+    fields = ["user", "borrowDate", "startTime", "end", "everyWeek", "endDate"]
     template_name = "LogForm.html"
 
     def get_form(self):
@@ -30,7 +34,22 @@ class createLog(LoginRequiredMixin, CreateView):
         return ctx
 
     def form_valid(self, form):
-        form.instance.classroom_id = self.kwargs["classroomId"]
+        classroomId = self.kwargs["classroomId"]
+        existResult = Log.objects.filter(classroom_id=classroomId)
+        fillDate = str(form.data["borrowDate"])
+        fillDate = fillDate.replace("/", "-")
+        fillDate = datetime.fromisoformat(fillDate).date()
+        print(fillDate)
+        for result in existResult:
+            if result.borrowDate == fillDate or (
+                    result.borrowDate.weekday() == fillDate.weekday() and result.everyWeek == True):
+                if result.startTime <= int(form.data["startTime"]) <= result.end \
+                        or result.startTime <= int(form.data["end"]) <= result.end:
+                    messages.error(self.request, "測試")
+                    return super().form_invalid(form)
+        if form.data["endDate"] == "":
+            form.instance.endDate = form.data["borrowDate"]
+        form.instance.classroom_id = classroomId
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -39,7 +58,7 @@ class createLog(LoginRequiredMixin, CreateView):
 
 class editLog(AccessMixin, UpdateView):
     model = Log
-    fields = ["user", "classroom", "borrowDate", "startTime", "end", "everyWeek"]
+    fields = ["user", "classroom", "borrowDate", "startTime", "end", "everyWeek", "endDate"]
     template_name = "LogForm.html"
 
     def get_form(self):

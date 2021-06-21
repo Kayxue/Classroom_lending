@@ -27,7 +27,9 @@
     <table class="uk-table uk-table-divider uk-table-striped uk-table-hover">
         <thead class="uk-light uk-background-secondary">
         <tr>
-            <th>日期</th>
+            <th>借用開始日期</th>
+            <th>借用結束日期</th>
+            <th>固定每週借用</th>
             <th>開始時間</th>
             <th>結束時間</th>
             <th>借用人</th>
@@ -38,6 +40,13 @@
         {% for reservation in reservations %}
         <tr>
             <td>{{ reservation.borrowDate }}</td>
+            {% if reservation.borrowDate == reservation.endDate %}
+            <td>同左</td>
+            <td><span uk-icon="icon: close"></span></td>
+            {% else %}
+            <td>{{ reservation.endDate }}</td>
+            <td><span uk-icon="icon: check"></span></td>
+            {% endif %}
             <td>{{ reservation.get_startTime_display }}</td>
             <td>{{ reservation.get_end_display }}</td>
             <td>

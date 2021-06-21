@@ -3,14 +3,30 @@
 {% block content %}
 <script>
     $(document).ready(() => {
+        $("#id_endDate").attr("required", false)
         $("table").find("input[type='text']").addClass("uk-input")
         $("table").find("input[type='checkbox']").addClass("uk-checkbox")
         $("table").find("label").addClass("uk-form-label")
         $("table").find("select").addClass("uk-select")
+        ifEnabledEndDate($("table").find("input[type='checkbox']")[0].checked)
+        $("table").find("input[type='checkbox']").change(e => ifEnabledEndDate(e.currentTarget.checked))
         $(".back").click(() => {
-            window.history.back()
+            window.location="/classrooms/"
         })
     })
+
+    function ifEnabledEndDate(checked){
+        if(checked){
+            console.log("啟用")
+            $("#id_endDate").attr("disabled", false)
+        }
+        else{
+            console.log("禁用")
+            $("#id_endDate").val("")
+            $("#id_endDate").attr("disabled", true)
+        }
+        console.log($("table").find("#id_endDate"))
+    }
 </script>
 <div class="uk-margin-small-top uk-margin-small-bottom">
     <h1>{{ title }}</h1>
@@ -40,6 +56,13 @@
         </li>
     </ul>
 </div>
+{% endif %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="uk-alert-danger uk-margin-small-top" uk-alert>
+            <p>{{message | safe}}</p>
+        </div>
+    {% endfor %}
 {% endif %}
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
