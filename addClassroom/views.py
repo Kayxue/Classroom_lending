@@ -102,7 +102,15 @@ class ClassroomDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         results = Log.objects.filter(classroom_id=self.kwargs["pk"])
-        context["reservations"] = results
+        reservations = []
+        for result in results:
+            if result.borrowDate == timezone.localdate() or (result.borrowDate <= timezone.localdate() <= result.endDate and result.borrowDate.weekday() == timezone.localdate().weekday() and result.everyWeek == True):
+                result.today = True
+            else:
+                result.today = False
+            reservations.append(result)
+
+        context["reservations"] = reservations
         return context
 
 

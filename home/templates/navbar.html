@@ -19,6 +19,7 @@
               {% if user.is_staff %}
               <li><a href="/admin/"><span uk-icon="cog"></span> 後臺</a></li>
               {% endif %}
+              <li><a href="{% url 'userDetail' user.id %}"><span uk-icon="info"></span> 個人資料</a></li>
               <li><a href="{% url 'logout' %}"><span uk-icon="sign-out"></span> 登出</a></li>
             </ul>
           </div>

@@ -11,16 +11,21 @@
         ifEnabledEndDate($("table").find("input[type='checkbox']")[0].checked)
         $("table").find("input[type='checkbox']").change(e => ifEnabledEndDate(e.currentTarget.checked))
         $(".back").click(() => {
-            window.location="/classrooms/"
+            window.location = "/classrooms/"
+        })
+        document.querySelectorAll('form input[name $= "Date"]').forEach(function (item) {
+            if (item.attributes['value'])
+                item.value = item.attributes['value'].value.replaceAll('/', '-');
+            item.type = 'date';
         })
     })
 
-    function ifEnabledEndDate(checked){
-        if(checked){
+    function ifEnabledEndDate(checked) {
+        if (checked) {
             console.log("啟用")
             $("#id_endDate").attr("disabled", false)
         }
-        else{
+        else {
             console.log("禁用")
             $("#id_endDate").val("")
             $("#id_endDate").attr("disabled", true)
@@ -58,11 +63,42 @@
 </div>
 {% endif %}
 {% if messages %}
-    {% for message in messages %}
-        <div class="uk-alert-danger uk-margin-small-top" uk-alert>
-            <p>{{message | safe}}</p>
-        </div>
-    {% endfor %}
+{% for message in messages %}
+<div class="uk-alert-danger uk-margin-medium-top" uk-alert>
+    <p>{{message | safe}}</p>
+    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover">
+        <thead class="uk-light uk-background-secondary">
+            <tr>
+                <th>借用開始日期</th>
+                <th>借用結束日期</th>
+                <th>固定每週借用</th>
+                <th>開始時間</th>
+                <th>結束時間</th>
+                <th>借用人</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in message.extra_tags %}
+            <tr class="blackText">
+                <td>{{ reservation.borrowDate }}</td>
+                {% if reservation.borrowDate == reservation.endDate %}
+                <td>同左</td>
+                <td><span uk-icon="icon: close"></span></td>
+                {% else %}
+                <td>{{ reservation.endDate }}</td>
+                <td><span uk-icon="icon: check"></span></td>
+                {% endif %}
+                <td>{{ reservation.get_startTime_display }}</td>
+                <td>{{ reservation.get_end_display }}</td>
+                <td>
+                    <a href="{% url 'userDetail' reservation.user_id %}">{{ reservation.user.last_name }}{{reservation.user.first_name }}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endfor %}
 {% endif %}
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}

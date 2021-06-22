@@ -28,4 +28,4 @@ class Log(Model):
 
     everyWeek = BooleanField(verbose_name="固定每週借用")
 
-    endDate = DateField("結束日期")
+    endDate = DateField("結束日期", null=True, blank=True)
