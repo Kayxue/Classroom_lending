@@ -37,8 +37,7 @@ class createLog(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         classroomId = self.kwargs["classroomId"]
-        existResult = Log.objects.filter(
-            classroom_id=classroomId, endDate__gt=timezone.localdate())
+        existResult = Log.objects.filter(classroom_id=classroomId)
         fillDate = str(form.data["borrowDate"])
         fillDate = fillDate.replace("/", "-")
         fillDate = datetime.fromisoformat(fillDate).date()
@@ -97,7 +96,7 @@ class editLog(AccessMixin, UpdateView):
                 if result.startTime <= int(form.data["startTime"]) <= result.end \
                         or result.startTime <= int(form.data["end"]) <= result.end:
                     reservations.append(result)
-        
+
         if len(reservations) > 0:
             messages.error(self.request, "您所選的節次有和此筆預約重疊：",
                            extra_tags=reservations)

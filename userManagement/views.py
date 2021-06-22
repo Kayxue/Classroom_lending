@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import *
 from django.forms.widgets import PasswordInput
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 from django.views.generic import *
 from .models import *
 from lendingSystem.models import *
@@ -76,7 +77,15 @@ class UserDetail(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         Userid = self.kwargs["pk"]
         results = Log.objects.filter(user_id=Userid)
-        context["reservations"] = results
+        reservations = []
+        for result in results:
+            if result.borrowDate == timezone.localdate() or (result.borrowDate.weekday() == timezone.localdate().weekday() and result.everyWeek == True):
+                result.today = True
+            else:
+                result.today = False
+
+            reservations.append(result)
+        context["reservations"] = reservations
         return context
 
 

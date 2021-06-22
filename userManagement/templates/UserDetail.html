@@ -21,41 +21,56 @@
 {% if user.is_authenticated %}
 <div>
     <h3>借用記錄</h3>
-    <table class="uk-table uk-table-divider uk-table-striped uk-table-hover">
-        <thead class="uk-light uk-background-secondary">
-        <tr>
-            <th>日期</th>
-            <th>借用教室</th>
-            <th>開始時間</th>
-            <th>結束時間</th>
-            <th>進行動作</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for reservation in reservations %}
-        <tr>
-            <td>{{ reservation.borrowDate }}</td>
-            <td><a href="{% url 'classroomDetail' reservation.classroom.id %}">{{ reservation.classroom.name }}</a></td>
-            <td>{{ reservation.get_startTime_display }}</td>
-            <td>{{ reservation.get_end_display }}</td>
-            {% if user.is_superuser or reservation.user.id == user.id %}
-            <td>
-                <div>
-                    <a href="{% url 'editLog' reservation.id %}" class="uk-button uk-button-primary">修改</a>
-                    <a href="{% url 'deleteLog' reservation.id %}" class="uk-button uk-button-danger">刪除</a>
-                </div>
-            </td>
-            {% else %}
-            <td>
-                <div>
-                    <button class="uk-button uk-button-primary" href="{% url 'editLog' reservation.id %}" disabled>您不是管理者</button>
-                </div>
-            </td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div uk-filter="target: .js-filter; animation: fade">
+        <ul class="uk-margin-small-bottom uk-margin-small-top uk-subnav uk-subnav-pill">
+            <li class="uk-active" uk-filter-control=".today"><a href="#">今天借用</a></li>
+            <li uk-filter-control><a href="#">所有借用</a></li>
+        </ul>
+        <table class="uk-table uk-table-divider uk-table-striped uk-table-hover">
+            <thead class="uk-light uk-background-secondary">
+            <tr>
+                <th>借用教室</th>
+                <th>借用開始日期</th>
+                <th>借用結束日期</th>
+                <th>固定每週借用</th>
+                <th>開始時間</th>
+                <th>結束時間</th>
+                <th>進行動作</th>
+            </tr>
+            </thead>
+            <tbody class="js-filter">
+            {% for reservation in reservations %}
+            <tr class="{% if reservation.today == True %}today{% else %}other{% endif %}">
+                <td><a href="{% url 'classroomDetail' reservation.classroom.id %}">{{ reservation.classroom.name }}</a></td>
+                <td>{{ reservation.borrowDate }}</td>
+                {% if reservation.borrowDate == reservation.endDate %}
+                <td>同左</td>
+                <td><span uk-icon="icon: close"></span></td>
+                {% else %}
+                <td>{{ reservation.endDate }}</td>
+                <td><span uk-icon="icon: check"></span></td>
+                {% endif %}
+                <td>{{ reservation.get_startTime_display }}</td>
+                <td>{{ reservation.get_end_display }}</td>
+                {% if user.is_superuser or reservation.user.id == user.id %}
+                <td>
+                    <div>
+                        <a href="{% url 'editLog' reservation.id %}" class="uk-button uk-button-primary">修改</a>
+                        <a href="{% url 'deleteLog' reservation.id %}" class="uk-button uk-button-danger">刪除</a>
+                    </div>
+                </td>
+                {% else %}
+                <td>
+                    <div>
+                        <button class="uk-button uk-button-primary" href="{% url 'editLog' reservation.id %}" disabled>您不是管理者</button>
+                    </div>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endif %}
 {% endblock %}
