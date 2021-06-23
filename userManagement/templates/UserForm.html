@@ -9,6 +9,11 @@
         $(".back").click(() => {
             window.history.back()
         })
+        document.querySelectorAll('form input[name $= "password"]').forEach(function (item) {
+            if (item.attributes['value'])
+                item.value = item.attributes['value'].value
+            item.type = 'password';
+        })
     })
 </script>
 <div class="uk-margin-small-top uk-margin-small-bottom">
