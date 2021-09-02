@@ -11,7 +11,7 @@
     {% for item in user_list %}
     <li>
         <div class="uk-card uk-card-default uk-card-small uk-card-hover uk-card-body uk-link-toggle" id="{{ item.id }}">
-            <a class="uk-card-title uk-header-medium" href="{% url 'userDetail' item.id %}">{{ item.username }}</a>
+            <a class="uk-card-title uk-header-medium" href="{% url 'userDetail' item.id %}">{{ item.last_name }}{{ item.first_name}}</a>
             {% if user.username == item.username %}
             <div class="uk-card-badge uk-label">目前帳戶</div>
             {% endif %}

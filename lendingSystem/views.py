@@ -41,7 +41,6 @@ class createLog(LoginRequiredMixin, CreateView):
         fillDate = str(form.data["borrowDate"])
         fillDate = fillDate.replace("/", "-")
         fillDate = datetime.fromisoformat(fillDate).date()
-        print(fillDate)
         reservations = []
         for result in existResult:
             if result.borrowDate == fillDate or (

@@ -13,11 +13,15 @@
 </div>
 <div class="uk-margin-small-top uk-margin-small-bottom">
     <div class="uk-card uk-card-default uk-margin-medium-top uk-margin-medium-bottom">
-        <div class="uk-card-header"><h3>教室位置</h3></div>
+        <div class="uk-card-header">
+            <h3>教室位置</h3>
+        </div>
         <div class="uk-card-body">{{ classroom.place }}</div>
     </div>
     <div class="uk-card uk-card-default">
-        <div class="uk-card-header"><h3>教室描述</h3></div>
+        <div class="uk-card-header">
+            <h3>教室描述</h3>
+        </div>
         <div class="uk-card-body">{{ classroom.description }}</div>
     </div>
 </div>
@@ -31,48 +35,49 @@
         </ul>
         <table class="uk-table uk-table-divider uk-table-striped uk-table-hover">
             <thead class="uk-light uk-background-secondary">
-            <tr>
-                <th>借用開始日期</th>
-                <th>借用結束日期</th>
-                <th>固定每週借用</th>
-                <th>開始時間</th>
-                <th>結束時間</th>
-                <th>借用人</th>
-                <th>進行動作</th>
-            </tr>
+                <tr>
+                    <th>借用開始日期</th>
+                    <th>借用結束日期</th>
+                    <th>固定每週借用</th>
+                    <th>開始時間</th>
+                    <th>結束時間</th>
+                    <th>借用人</th>
+                    <th>進行動作</th>
+                </tr>
             </thead>
             <tbody class="js-filter">
-            {% for reservation in reservations %}
-            <tr class="{% if reservation.today == True %}today{% else %}other{% endif %}">
-                <td>{{ reservation.borrowDate }}</td>
-                {% if reservation.borrowDate == reservation.endDate %}
-                <td>同左</td>
-                <td><span uk-icon="icon: close"></span></td>
-                {% else %}
-                <td>{{ reservation.endDate }}</td>
-                <td><span uk-icon="icon: check"></span></td>
-                {% endif %}
-                <td>{{ reservation.get_startTime_display }}</td>
-                <td>{{ reservation.get_end_display }}</td>
-                <td>
-                    <a href="{% url 'userDetail' reservation.user_id %}">{{ reservation.user.last_name }}{{ reservation.user.first_name }}</a>
-                </td>
-                {% if user.is_superuser or reservation.user_id == user.id %}
-                <td>
-                    <div>
-                        <a href="{% url 'editLog' reservation.id %}" class="uk-button uk-button-primary">修改</a>
-                        <a href="{% url 'deleteLog' reservation.id %}" class="uk-button uk-button-danger">刪除</a>
-                    </div>
-                </td>
-                {% else %}
-                <td>
-                    <div>
-                        <button class="uk-button uk-button-primary" href="{% url 'editLog' reservation.id %}" disabled>您不是管理者</button>
-                    </div>
-                </td>
-                {% endif %}
-            </tr>
-            {% endfor %}
+                {% for reservation in reservations %}
+                <tr class="{% if reservation.today == True %}today{% else %}other{% endif %}">
+                    <td>{{ reservation.borrowDate }}</td>
+                    {% if reservation.borrowDate == reservation.endDate %}
+                    <td>同左</td>
+                    <td><span uk-icon="icon: close"></span></td>
+                    {% else %}
+                    <td>{{ reservation.endDate }}</td>
+                    <td><span uk-icon="icon: check"></span></td>
+                    {% endif %}
+                    <td>{{ reservation.get_startTime_display }}</td>
+                    <td>{{ reservation.get_end_display }}</td>
+                    <td>
+                        <a href="{% url 'userDetail' reservation.user_id %}">{{ reservation.user.last_name }}{{ reservation.user.first_name }}</a>
+                    </td>
+                    {% if user.is_superuser or reservation.user_id == user.id %}
+                    <td>
+                        <div>
+                            <a href="{% url 'editLog' reservation.id %}" class="uk-button uk-button-primary">修改</a>
+                            <a href="{% url 'deleteLog' reservation.id %}" class="uk-button uk-button-danger">刪除</a>
+                        </div>
+                    </td>
+                    {% else %}
+                    <td>
+                        <div>
+                            <button class="uk-button uk-button-primary" href="{% url 'editLog' reservation.id %}"
+                                disabled>您不是管理者</button>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

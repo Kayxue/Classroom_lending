@@ -18,8 +18,20 @@
     <li>
         <div class="uk-card uk-card-default uk-card-small uk-card-body">
             <h3 class="uk-card-title">{{ object.classroom.name }}</h3>
-            <p>借用人：{{ object.user.username }}</p>
-            <p>借用時間：{{ object.borrowDate }} {{ object.get_startTime_display }}～{{ object.get_end_display }}</p>
+            <p>借用人：{{ object.user.last_name }}{{ object.user.first_name }}</p>
+            {% if object.everyWeek == False %}
+                {% if object.get_startTime_display != object.get_end_display %}
+                <p>借用時間：{{ object.borrowDate }} {{ object.get_startTime_display }}～{{ object.get_end_display }}</p>
+                {% else %}
+                <p>借用時間：{{ object.borrowDate }} {{ object.get_startTime_display }}</p>
+                {% endif %}
+            {% else %}
+                {% if object.get_startTime_display != object.get_end_display %}
+                <p>借用時間：{{ object.borrowDate }}～{{ object.endDate }}，每週{{object.borrowDate.weekday}}的{{ object.get_startTime_display }}～{{ object.get_end_display }}</p>
+                {% else %}
+                <p>借用時間：{{ object.borrowDate }}～{{ object.endDate }}，每週{{object.borrowDate.weekday}}的{{ object.get_startTime_display }}</p>
+                {% endif %}
+            {% endif %}
         </div>
     </li>
 </ul>
